@@ -3,6 +3,9 @@ package imHarish03.reddis.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import imHarish03.reddis.entity.Invoice;
@@ -23,6 +26,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 	}
 
 	@Override
+	@CachePut(value = "Invoice", key = "#invId")
 	public Invoice updateInvoice(Invoice inv, Integer invId) {
 		Invoice invoice = invoiceRepo.findById(invId)
 				.orElseThrow(() -> new InvoiceNotFoundException("Invoice Not Found"));
@@ -33,6 +37,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 	}
 
 	@Override
+	@CacheEvict(value = "Invoice", key = "#invId")
 	public void deleteInvoice(Integer invId) {
 		Invoice invoice = invoiceRepo.findById(invId)
 				.orElseThrow(() -> new InvoiceNotFoundException("Invoice Not Found"));
@@ -40,6 +45,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 	}
 
 	@Override
+	@Cacheable(value = "Invoice", key = "#invId")
 	public Invoice getOneInvoice(Integer invId) {
 		Invoice invoice = invoiceRepo.findById(invId)
 				.orElseThrow(() -> new InvoiceNotFoundException("Invoice Not Found"));
@@ -47,6 +53,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 	}
 
 	@Override
+	@Cacheable(value = "Invoice")
 	public List<Invoice> getAllInvoices() {
 		return invoiceRepo.findAll();
 	}
